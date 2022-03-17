@@ -1,6 +1,7 @@
 package com.sampana.robotapocalypsesampana.repository;
 
 import com.sampana.robotapocalypsesampana.RobotApocalypseSampanaApplication;
+import com.sampana.robotapocalypsesampana.exception.NotFoundException;
 import com.sampana.robotapocalypsesampana.model.Survivor;
 import com.sampana.robotapocalypsesampana.repository.contract.ISurvivorRepository;
 import com.sampana.robotapocalypsesampana.util.TestConstants;
@@ -65,6 +66,9 @@ class SurvivorRepositoryTest {
         Survivor actualSurvivor = survivorRepository.getById(expectedSurvivor.getId());
         // assert
         assertEquals(expectedSurvivor.getUuid(), actualSurvivor.getUuid());
+
+        // assert
+        assertThrows(NotFoundException.class, () -> survivorRepository.getById(10000000009090L));
     }
 
     @Test
@@ -87,5 +91,16 @@ class SurvivorRepositoryTest {
         survivorRepository.delete(test.getId());
         // assert
         assertFalse(iSurvivorRepository.existsById(test.getId()));
+    }
+
+    @Test
+    void getByUuid() {
+        // act
+        Survivor actualSurvivor = survivorRepository.getByUuid(expectedSurvivor.getUuid());
+        // assert
+        assertEquals(expectedSurvivor.getUuid(), actualSurvivor.getUuid());
+
+        // assert
+        assertThrows(NotFoundException.class, () -> survivorRepository.getByUuid("unknown"));
     }
 }

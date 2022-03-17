@@ -44,7 +44,12 @@ public class SurvivorRepository implements IRepository<Survivor> {
     @Override
     public Survivor getById(long id) {
         Optional<Survivor> optionalSurvivor = iSurvivorRepository.findById(id);
-        return optionalSurvivor.orElseThrow(() -> new NotFoundException("Survivor not found"));
+        return optionalSurvivor.orElseThrow(() -> new NotFoundException("Survivor " + id + " not found"));
+    }
+
+    public Survivor getByUuid(String uuid) {
+        Optional<Survivor> optionalSurvivor = iSurvivorRepository.findByUuid(uuid);
+        return optionalSurvivor.orElseThrow(() -> new NotFoundException("Survivor " + uuid + " not found"));
     }
 
     @Override

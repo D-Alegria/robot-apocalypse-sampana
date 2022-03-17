@@ -4,6 +4,8 @@ import com.sampana.robotapocalypsesampana.model.Survivor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * Created by Demilade Oladugba on 3/17/2022
  **/
@@ -11,4 +13,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ISurvivorRepository extends JpaRepository<Survivor, Long> {
 
+    Optional<Survivor> findByUuid(String uuid);
 }

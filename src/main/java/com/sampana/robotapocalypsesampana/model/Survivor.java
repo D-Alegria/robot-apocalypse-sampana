@@ -37,7 +37,7 @@ public class Survivor {
     @Enumerated(EnumType.STRING)
     @NotEnum(regexp = "Male|Female|Other")
     private Gender gender;
-    private boolean infected = false;
+    private boolean infected;
     @ElementCollection
     private List<String> informants;
     @OneToOne(cascade = CascadeType.ALL)
