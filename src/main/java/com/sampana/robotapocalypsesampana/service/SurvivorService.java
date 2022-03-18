@@ -1,5 +1,6 @@
 package com.sampana.robotapocalypsesampana.service;
 
+import com.sampana.robotapocalypsesampana.exception.BadRequestException;
 import com.sampana.robotapocalypsesampana.exception.RequestAlreadyPerformedException;
 import com.sampana.robotapocalypsesampana.model.Location;
 import com.sampana.robotapocalypsesampana.model.Resource;
@@ -47,10 +48,18 @@ public class SurvivorService {
         survivorRepository.getByUuid(request.getInformantUuid());
         Survivor infected = survivorRepository.getByUuid(request.getInfectedUuid());
 
+        if (request.getInfectedUuid().equals(request.getInformantUuid()))
+            throw new BadRequestException("Sorry, you cannot report yourself");
+
         if (infected.isInfected())
             throw new RequestAlreadyPerformedException(String.format("%s as been flag as INFECTED", infected.getName()));
+
         if (infected.getInformants() == null)
             infected.setInformants(new ArrayList<>());
+
+        if (infected.getInformants().contains(request.getInformantUuid()))
+            throw new RequestAlreadyPerformedException("You have reported this infected");
+
         infected.getInformants().add(request.getInformantUuid());
         if (infected.getInformants().size() >= 3)
             infected.setInfected(true);

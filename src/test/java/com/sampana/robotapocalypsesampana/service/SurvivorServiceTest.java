@@ -1,6 +1,7 @@
 package com.sampana.robotapocalypsesampana.service;
 
 import com.sampana.robotapocalypsesampana.RobotApocalypseSampanaApplication;
+import com.sampana.robotapocalypsesampana.exception.BadRequestException;
 import com.sampana.robotapocalypsesampana.exception.RequestAlreadyPerformedException;
 import com.sampana.robotapocalypsesampana.model.Location;
 import com.sampana.robotapocalypsesampana.model.Response;
@@ -102,5 +103,19 @@ class SurvivorServiceTest {
         when(survivorRepository.update(any(Survivor.class))).thenReturn(expectedSurvivor);
         // assert
         assertThrows(RequestAlreadyPerformedException.class, () -> survivorService.reportInfected(request));
+    }
+
+    @Test
+    void reportInfectedReportYourself() {
+        // arrange
+        InfectedReportRequest request = new InfectedReportRequest();
+        request.setInfectedUuid("infected-uuid");
+        request.setInformantUuid("infected-uuid");
+        expectedSurvivor.setInfected(true);
+        when(survivorRepository.getByUuid(request.getInfectedUuid())).thenReturn(expectedSurvivor);
+        when(survivorRepository.getByUuid(request.getInformantUuid())).thenReturn(expectedSurvivor);
+        when(survivorRepository.update(any(Survivor.class))).thenReturn(expectedSurvivor);
+        // assert
+        assertThrows(BadRequestException.class, () -> survivorService.reportInfected(request));
     }
 }
