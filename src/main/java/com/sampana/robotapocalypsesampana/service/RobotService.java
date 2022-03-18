@@ -4,7 +4,7 @@ import com.sampana.robotapocalypsesampana.exception.BadRequestException;
 import com.sampana.robotapocalypsesampana.exception.SystemException;
 import com.sampana.robotapocalypsesampana.model.Response;
 import com.sampana.robotapocalypsesampana.model.Robot;
-import com.sampana.robotapocalypsesampana.model.RobotDto;
+import com.sampana.robotapocalypsesampana.model.dto.RobotDto;
 import com.sampana.robotapocalypsesampana.util.RequestManager;
 import com.sampana.robotapocalypsesampana.util.Utils;
 import org.apache.commons.lang3.StringUtils;

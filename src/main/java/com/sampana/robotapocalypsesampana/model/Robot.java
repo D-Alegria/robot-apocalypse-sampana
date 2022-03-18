@@ -1,6 +1,7 @@
 package com.sampana.robotapocalypsesampana.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sampana.robotapocalypsesampana.model.dto.RobotDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

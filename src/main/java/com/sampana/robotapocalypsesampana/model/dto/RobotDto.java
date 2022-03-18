@@ -1,4 +1,4 @@
-package com.sampana.robotapocalypsesampana.model;
+package com.sampana.robotapocalypsesampana.model.dto;
 
 import lombok.Data;
 
