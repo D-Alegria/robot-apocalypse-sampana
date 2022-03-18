@@ -43,6 +43,7 @@ class SurvivorRepositoryTest {
         // arrange
         Survivor test = TestConstants.getTestSurvivor();
         test.setUuid("test-uuid-unique");
+        test.setName("test-name-unique");
         // act
         Survivor actualSurvivor = survivorRepository.create(test);
         // assert
@@ -86,6 +87,7 @@ class SurvivorRepositoryTest {
         // arrange
         Survivor test = TestConstants.getTestSurvivor();
         test.setUuid("test-uuid-unique");
+        test.setName("test-name-unique");
         test = iSurvivorRepository.save(test);
         // act
         survivorRepository.delete(test.getId());
