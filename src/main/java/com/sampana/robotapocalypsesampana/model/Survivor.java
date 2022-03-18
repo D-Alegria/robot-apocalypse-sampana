@@ -30,6 +30,7 @@ public class Survivor {
     private long id;
     @Column(unique = true)
     private String uuid;
+    @Column(unique = true)
     @NotBlank(message = "name is required")
     private String name;
     @Min(value = 1L, message = "Minimum age is 1")

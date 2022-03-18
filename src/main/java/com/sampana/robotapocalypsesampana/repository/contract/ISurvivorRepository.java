@@ -14,4 +14,5 @@ import java.util.Optional;
 public interface ISurvivorRepository extends JpaRepository<Survivor, Long> {
 
     Optional<Survivor> findByUuid(String uuid);
+    Optional<Survivor> findByNameIgnoreCase(String uuid);
 }

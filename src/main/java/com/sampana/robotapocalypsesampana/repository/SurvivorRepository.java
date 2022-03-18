@@ -52,6 +52,11 @@ public class SurvivorRepository implements IRepository<Survivor> {
         return optionalSurvivor.orElseThrow(() -> new NotFoundException("Survivor " + uuid + " not found"));
     }
 
+    public Survivor getByName(String name) {
+        Optional<Survivor> optionalSurvivor = iSurvivorRepository.findByNameIgnoreCase(name);
+        return optionalSurvivor.orElse(null);
+    }
+
     @Override
     public Survivor update(Survivor survivor) {
         if (iSurvivorRepository.findById(survivor.getId()).isEmpty())

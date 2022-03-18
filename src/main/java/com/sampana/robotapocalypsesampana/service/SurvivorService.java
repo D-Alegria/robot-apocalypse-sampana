@@ -29,6 +29,8 @@ public class SurvivorService {
     }
 
     public Response<Survivor> addSurvivor(Survivor survivor) {
+        if (survivorRepository.getByName(survivor.getName()) != null)
+            throw new BadRequestException("Survivor with name " + survivor.getName() + " already exists");
         survivor.setUuid(UUID.randomUUID().toString());
         survivor.setInfected(false);
         survivor.setResource(new Resource());

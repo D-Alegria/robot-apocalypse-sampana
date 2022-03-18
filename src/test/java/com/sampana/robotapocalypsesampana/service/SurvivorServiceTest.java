@@ -53,11 +53,20 @@ class SurvivorServiceTest {
     void addSurvivor() {
         // arrange
         when(survivorRepository.create(any(Survivor.class))).thenReturn(expectedSurvivor);
+        when(survivorRepository.getByName(anyString())).thenReturn(null);
         // act
         Response<Survivor> actualResponse = survivorService.addSurvivor(expectedSurvivor);
         // assert
         assertEquals(expectedResponse.getResponseCode(), actualResponse.getResponseCode());
         assertFalse(actualResponse.getModelList().get(0).isInfected());
+    }
+
+    @Test
+    void addSurvivorNameExists() {
+        // arrange
+        when(survivorRepository.getByName(anyString())).thenReturn(expectedSurvivor);
+        // assert
+        assertThrows(BadRequestException.class, () -> survivorService.addSurvivor(expectedSurvivor));
     }
 
     @Test
