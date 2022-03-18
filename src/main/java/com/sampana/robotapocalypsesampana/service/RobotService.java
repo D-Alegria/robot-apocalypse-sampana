@@ -33,16 +33,7 @@ public class RobotService {
     }
 
     public Response<Robot> getAllRobots(String query) {
-        ResponseEntity<List> responseEntity = requestManager.get(robotLink, null, List.class);
-
-        if (responseEntity.getStatusCode() != HttpStatus.OK || !responseEntity.hasBody() || responseEntity.getBody() == null)
-            throw new SystemException("An error occurred while getting all robot. Please try again later.");
-
-        List<Robot> robots = new ArrayList<>();
-        for (Object o : responseEntity.getBody()) {
-            Robot robot = new Robot(Utils.jsonUnMarshall(Utils.jsonMarshal(o), RobotDto.class));
-            robots.add(robot);
-        }
+        List<Robot> robots = getAllRobots();
         query = StringUtils.toRootLowerCase(query);
 
         switch (query) {
@@ -64,5 +55,19 @@ public class RobotService {
                 throw new BadRequestException("Invalid query parameter. Allowed parameters are [model, serialNumber|sn, manufacturedDate|date, category]");
         }
         return Utils.successfulResponse(robots);
+    }
+
+    public List<Robot> getAllRobots() {
+        ResponseEntity<List> responseEntity = requestManager.get(robotLink, null, List.class);
+
+        if (responseEntity.getStatusCode() != HttpStatus.OK || !responseEntity.hasBody() || responseEntity.getBody() == null)
+            throw new SystemException("An error occurred while getting all robot. Please try again later.");
+
+        List<Robot> robots = new ArrayList<>();
+        for (Object o : responseEntity.getBody()) {
+            Robot robot = new Robot(Utils.jsonUnMarshall(Utils.jsonMarshal(o), RobotDto.class));
+            robots.add(robot);
+        }
+        return robots;
     }
 }
