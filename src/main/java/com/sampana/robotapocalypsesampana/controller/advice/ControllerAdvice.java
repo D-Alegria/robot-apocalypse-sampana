@@ -3,6 +3,7 @@ package com.sampana.robotapocalypsesampana.controller.advice;
 
 import com.sampana.robotapocalypsesampana.exception.NotFoundException;
 import com.sampana.robotapocalypsesampana.exception.RequestAlreadyPerformedException;
+import com.sampana.robotapocalypsesampana.exception.SystemException;
 import com.sampana.robotapocalypsesampana.model.Error;
 import com.sampana.robotapocalypsesampana.model.Response;
 import com.sampana.robotapocalypsesampana.model.enums.ResponseCode;
@@ -85,7 +86,13 @@ public class ControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Response<?>> handleException(Exception e) {
-        return commonResponseForSystemError(e);
+        return commonResponseForSystemError("Error occurred, please contact the developer", e);
+    }
+
+    @ExceptionHandler(SystemException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Response<?>> handleSystemException(SystemException e) {
+        return commonResponseForSystemError(e.getMessage(), e);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
@@ -154,11 +161,11 @@ public class ControllerAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<Response<?>> commonResponseForSystemError(Exception e) {
+    private ResponseEntity<Response<?>> commonResponseForSystemError(String message, Exception e) {
         Response<?> response = new Response<>();
         response.setResponseCode(ResponseCode.SystemError.code);
-        response.setResponseMessage("Error occurred, please contact the administrator");
-        log.error("Error occurred, please contact the administrator");
+        response.setResponseMessage(message);
+        log.error(e.getMessage());
         log.error("Error information -> " + e.getMessage() + "\n ");
         e.printStackTrace();
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
