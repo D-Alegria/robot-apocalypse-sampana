@@ -1,11 +1,13 @@
 package com.sampana.robotapocalypsesampana.service;
 
+import com.sampana.robotapocalypsesampana.exception.BadRequestException;
 import com.sampana.robotapocalypsesampana.exception.SystemException;
 import com.sampana.robotapocalypsesampana.model.Response;
 import com.sampana.robotapocalypsesampana.model.Robot;
 import com.sampana.robotapocalypsesampana.model.RobotDto;
 import com.sampana.robotapocalypsesampana.util.RequestManager;
 import com.sampana.robotapocalypsesampana.util.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ public class RobotService {
         this.robotLink = robotLink;
     }
 
-    public Response<Robot> getAllRobots() {
+    public Response<Robot> getAllRobots(String query) {
         ResponseEntity<List> responseEntity = requestManager.get(robotLink, null, List.class);
 
         if (responseEntity.getStatusCode() != HttpStatus.OK || !responseEntity.hasBody() || responseEntity.getBody() == null)
@@ -41,8 +43,26 @@ public class RobotService {
             Robot robot = new Robot(Utils.jsonUnMarshall(Utils.jsonMarshal(o), RobotDto.class));
             robots.add(robot);
         }
+        query = StringUtils.toRootLowerCase(query);
 
-        robots.sort(Comparator.comparing(Robot::getManufacturedDate));
+        switch (query) {
+            case "model":
+                robots.sort(Comparator.comparing(Robot::getModel));
+                break;
+            case "serialNumber":
+            case "sn":
+                robots.sort(Comparator.comparing(Robot::getSerialNumber));
+                break;
+            case "manufacturedDate":
+            case "date":
+                robots.sort(Comparator.comparing(Robot::getManufacturedDate));
+                break;
+            case "category":
+                robots.sort(Comparator.comparing(Robot::getCategory));
+                break;
+            default:
+                throw new BadRequestException("Invalid query parameter. Allowed parameters are [model, serialNumber|sn, manufacturedDate|date, category]");
+        }
         return Utils.successfulResponse(robots);
     }
 }

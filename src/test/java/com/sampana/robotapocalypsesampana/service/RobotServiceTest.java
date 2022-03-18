@@ -1,6 +1,7 @@
 package com.sampana.robotapocalypsesampana.service;
 
 import com.sampana.robotapocalypsesampana.RobotApocalypseSampanaApplication;
+import com.sampana.robotapocalypsesampana.exception.BadRequestException;
 import com.sampana.robotapocalypsesampana.exception.SystemException;
 import com.sampana.robotapocalypsesampana.model.Response;
 import com.sampana.robotapocalypsesampana.model.Robot;
@@ -63,7 +64,7 @@ class RobotServiceTest {
         // arrange
         when(requestManager.get(anyString(), isNull(), eq(List.class))).thenReturn(responseEntity);
         // act
-        Response<Robot> actualResponse = robotService.getAllRobots();
+        Response<Robot> actualResponse = robotService.getAllRobots("date");
         // assert
         assertEquals(ResponseCode.Successful.code, actualResponse.getResponseCode());
         assertFalse(CollectionUtils.isEmpty(actualResponse.getModelList()));
@@ -71,11 +72,19 @@ class RobotServiceTest {
     }
 
     @Test
-    void getAllRobotsError() {
+    void getAllRobotsSystemError() {
         // arrange
         responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         when(requestManager.get(anyString(), isNull(), eq(List.class))).thenReturn(responseEntity);
         // assert
-        assertThrows(SystemException.class, () -> robotService.getAllRobots());
+        assertThrows(SystemException.class, () -> robotService.getAllRobots("date"));
+    }
+
+    @Test
+    void getAllRobotsBadRequest() {
+        // arrange
+        when(requestManager.get(anyString(), isNull(), eq(List.class))).thenReturn(responseEntity);
+        // assert
+        assertThrows(BadRequestException.class, () -> robotService.getAllRobots("de"));
     }
 }

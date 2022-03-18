@@ -1,6 +1,7 @@
 package com.sampana.robotapocalypsesampana.controller.advice;
 
 
+import com.sampana.robotapocalypsesampana.exception.BadRequestException;
 import com.sampana.robotapocalypsesampana.exception.NotFoundException;
 import com.sampana.robotapocalypsesampana.exception.RequestAlreadyPerformedException;
 import com.sampana.robotapocalypsesampana.exception.SystemException;
@@ -143,6 +144,12 @@ public class ControllerAdvice {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<Response<?>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         return commonResponseForBadRequest("Request not supported", e);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Response<?>> handleBadRequestException(BadRequestException e) {
+        return commonResponseForBadRequest(e.getMessage(), e);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
